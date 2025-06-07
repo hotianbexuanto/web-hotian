@@ -76,3 +76,9 @@ build/
 
 # Cache
 .cache/
+
+# 确保不忽略重要的静态文件
+!*.html
+!*.css
+!*.js
+!*.json

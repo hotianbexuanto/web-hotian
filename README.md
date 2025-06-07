@@ -60,10 +60,11 @@
    - 进入仓库设置 (Settings)
    - 滚动到 "Pages" 部分
    - 在 "Source" 下选择 "GitHub Actions"
-   - 项目会自动构建和部署
+   - 等待自动构建完成（约1-2分钟）
 
 4. **访问你的游戏**
    - 访问 `https://你的用户名.github.io/web-hotian`
+   - 如果出现404错误，等待几分钟后重试
 
 ### 手动部署
 
@@ -75,15 +76,45 @@
 ### 本地测试
 
 ```bash
-# 安装依赖
-npm install
+# 方法1：使用Python（推荐）
+python -m http.server 8080
+# 然后访问 http://localhost:8080
 
-# 启动本地服务器
-npm start
+# 方法2：直接在浏览器中打开
+# 双击 index.html 或 simple-game.html
 
-# 或使用开发服务器（支持热重载）
-npm run dev
+# 方法3：使用Node.js（如果已安装）
+npx http-server . -p 8080 -o
 ```
+
+## 🔧 故障排除
+
+### GitHub Pages部署问题
+
+1. **构建失败**
+   - 检查仓库是否为公开仓库
+   - 确保已启用GitHub Pages
+   - 查看Actions标签页的构建日志
+
+2. **404错误**
+   - 等待5-10分钟让部署生效
+   - 检查仓库名称是否正确
+   - 确保文件名为`index.html`
+
+3. **游戏无法加载**
+   - 尝试访问`simple-game.html`（简化版本）
+   - 检查浏览器控制台是否有错误
+   - 确保浏览器支持现代JavaScript
+
+### 本地运行问题
+
+1. **CORS错误**
+   - 不要直接双击HTML文件
+   - 使用本地服务器运行
+
+2. **Three.js加载失败**
+   - 检查网络连接
+   - 尝试使用简化版本`simple-game.html`
 
 ## 🛠️ 技术栈
 

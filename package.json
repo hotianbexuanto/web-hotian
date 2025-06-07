@@ -4,10 +4,8 @@
   "description": "第一卷 进入幻想 - 网页动画游戏",
   "main": "index.html",
   "scripts": {
-    "start": "npx http-server . -p 8080 -o",
-    "dev": "npx live-server --port=8080 --open=/",
+    "start": "python -m http.server 8080",
     "build": "echo 'No build process needed for static site'",
-    "deploy": "gh-pages -d .",
     "test": "echo 'No tests specified'"
   },
   "repository": {
@@ -28,11 +26,6 @@
   "author": "Your Name",
   "license": "MIT",
   "homepage": "https://username.github.io/web-hotian/",
-  "devDependencies": {
-    "gh-pages": "^6.0.0",
-    "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
-  },
   "dependencies": {},
   "engines": {
     "node": ">=14.0.0"
