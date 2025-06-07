@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第一卷 进入幻想 - 网页动画游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/chapters.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+
+<body>
+    <!-- 加载屏幕 -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="spiral-loader"></div>
+            <h2>进入幻想世界...</h2>
+            <div class="loading-text">正在构建梦境</div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主菜单 -->
+    <div id="main-menu" class="main-menu hidden">
+        <div class="menu-background">
+            <div class="floating-particles"></div>
+            <div class="mirror-fragments"></div>
+        </div>
+        <div class="menu-content">
+            <h1 class="game-title">
+                <span class="title-text">第一卷</span>
+                <span class="title-subtitle">进入幻想</span>
+            </h1>
+            <div class="menu-buttons">
+                <button class="menu-btn start-btn" data-action="start">开始游戏</button>
+                <button class="menu-btn chapter-btn" data-action="chapters">章节选择</button>
+                <button class="menu-btn settings-btn" data-action="settings">设置</button>
+                <button class="menu-btn about-btn" data-action="about">关于</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 章节选择界面 -->
+    <div id="chapter-select" class="chapter-select hidden">
+        <div class="chapter-background">
+            <canvas id="chapter-canvas"></canvas>
+        </div>
+        <div class="chapter-content">
+            <h2>选择章节</h2>
+            <div class="chapters-grid">
+                <div class="chapter-card" data-chapter="1">
+                    <div class="chapter-number">第一章</div>
+                    <div class="chapter-title">日常</div>
+                    <div class="chapter-description">学校的懒散时光</div>
+                </div>
+                <div class="chapter-card" data-chapter="2">
+                    <div class="chapter-number">第二章</div>
+                    <div class="chapter-title">家家</div>
+                    <div class="chapter-description">回家的路程</div>
+                </div>
+                <div class="chapter-card" data-chapter="3">
+                    <div class="chapter-number">第三章</div>
+                    <div class="chapter-title">修改</div>
+                    <div class="chapter-description">进入梦境</div>
+                </div>
+                <div class="chapter-card" data-chapter="4">
+                    <div class="chapter-number">第四章</div>
+                    <div class="chapter-title">创造</div>
+                    <div class="chapter-description">衣服与魔法书</div>
+                </div>
+                <div class="chapter-card" data-chapter="5">
+                    <div class="chapter-number">第五章</div>
+                    <div class="chapter-title">造物与意识</div>
+                    <div class="chapter-description">蓝色能量球</div>
+                </div>
+            </div>
+            <button class="back-btn">返回主菜单</button>
+        </div>
+    </div>
+
+    <!-- 游戏主界面 -->
+    <div id="game-container" class="game-container hidden">
+        <!-- 3D场景容器 -->
+        <div id="scene-container" class="scene-container">
+            <canvas id="game-canvas"></canvas>
+        </div>
+
+        <!-- UI覆盖层 -->
+        <div class="game-ui">
+            <!-- 顶部信息栏 -->
+            <div class="top-bar">
+                <div class="chapter-info">
+                    <span id="current-chapter">第一章</span>
+                    <span id="chapter-title">日常</span>
+                </div>
+                <div class="game-controls">
+                    <button class="ui-btn menu-toggle">菜单</button>
+                </div>
+            </div>
+
+            <!-- 故事文本显示区域 -->
+            <div id="story-text" class="story-text">
+                <div class="text-content">
+                    <p id="current-text">点击开始阅读故事...</p>
+                </div>
+                <div class="text-controls">
+                    <button class="text-btn prev-btn">上一段</button>
+                    <button class="text-btn next-btn">下一段</button>
+                    <button class="text-btn auto-btn">自动播放</button>
+                </div>
+            </div>
+
+            <!-- 交互提示 -->
+            <div id="interaction-hint" class="interaction-hint hidden">
+                <div class="hint-content">
+                    <div class="hint-icon">✨</div>
+                    <div class="hint-text">点击进行交互</div>
+                </div>
+            </div>
+
+            <!-- 角色创造界面（第三、四章使用） -->
+            <div id="character-creator" class="character-creator hidden">
+                <div class="creator-panel">
+                    <h3>角色外观修改</h3>
+                    <div class="creator-controls">
+                        <div class="control-group">
+                            <label>身高</label>
+                            <input type="range" id="height-slider" min="100" max="180" value="135">
+                            <span id="height-value">135cm</span>
+                        </div>
+                        <div class="control-group">
+                            <label>头发颜色</label>
+                            <div class="color-options">
+                                <div class="color-option" data-color="silver" style="background: silver;"></div>
+                                <div class="color-option" data-color="white" style="background: white;"></div>
+                                <div class="color-option" data-color="gray" style="background: gray;"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label>发型</label>
+                            <select id="hairstyle-select">
+                                <option value="twin-tails">双马尾</option>
+                                <option value="ponytail">马尾</option>
+                                <option value="long">长发</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="apply-btn">应用修改</button>
+                </div>
+            </div>
+
+            <!-- 物品创造界面（第四章使用） -->
+            <div id="item-creator" class="item-creator hidden">
+                <div class="creator-panel">
+                    <h3>创造物品</h3>
+                    <div class="creation-options">
+                        <button class="create-btn" data-item="robe">创造黑袍</button>
+                        <button class="create-btn" data-item="sleepwear">创造睡衣</button>
+                        <button class="create-btn" data-item="book">创造魔法书</button>
+                    </div>
+                    <div class="creation-progress hidden">
+                        <div class="progress-text">正在创造中...</div>
+                        <div class="creation-animation"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 设置界面 -->
+    <div id="settings-panel" class="settings-panel hidden">
+        <div class="settings-content">
+            <h2>设置</h2>
+            <div class="setting-group">
+                <label>音效音量</label>
+                <input type="range" id="sfx-volume" min="0" max="100" value="70">
+            </div>
+            <div class="setting-group">
+                <label>背景音乐</label>
+                <input type="range" id="bgm-volume" min="0" max="100" value="50">
+            </div>
+            <div class="setting-group">
+                <label>文字速度</label>
+                <select id="text-speed">
+                    <option value="slow">慢</option>
+                    <option value="normal" selected>正常</option>
+                    <option value="fast">快</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label>主题模式</label>
+                <select id="theme-mode">
+                    <option value="dark" selected>暗色</option>
+                    <option value="light">亮色</option>
+                </select>
+            </div>
+            <button class="close-settings">关闭</button>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/utils.js"></script>
+    <script src="js/scene-manager.js"></script>
+    <script src="js/story-manager.js"></script>
+    <script src="js/character-creator.js"></script>
+    <script src="js/item-creator.js"></script>
+    <script src="js/game.js"></script>
+</body>
+
+</html>
